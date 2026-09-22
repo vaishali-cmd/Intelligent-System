@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Detail</title>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<h1>{{ task.title }}</h1>
+<p>{{ task.description }}</p>
+<p>Status: {{ task.status.value }}</p>
+<p>Progress: {{ task.progress }}%</p>
+{% if recommendations %}
+    <h2>Smart Assignment Recommendations</h2>
+    <ul>
+    {% for rec in recommendations %}
+        <li>{{ rec.employee.full_name }} – Score: {{ rec.score }}
+            <ul>
+                {% for reason in rec.reasons %}<li>{{ reason }}</li>{% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% if workload %}
+    <h2>Workload Info</h2>
+    <p>Active tasks: {{ workload.active_count }}</p>
+{% endif %}
+{% if deadline_risk %}
+    <p><strong>Deadline Risk!</strong></p>
+{% endif %}
+</body>
+</html>

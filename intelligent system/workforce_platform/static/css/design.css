@@ -1,0 +1,109 @@
+/* Premium SaaS Design System */
+/* Dark background */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a; /* deep charcoal */
+    color: #e0e0e0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.main-container {
+    display: flex;
+    flex: 1;
+    padding: 2rem;
+    gap: 2rem;
+}
+.sidebar {
+    width: 260px;
+    background: rgba(20,20,30,0.85);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+.sidebar a {
+    color: #e0e0e0;
+    text-decoration: none;
+    display: block;
+    padding: .5rem 0;
+    transition: color .2s;
+}
+.sidebar a:hover {
+    color: #ff6ec7; /* pink accent */
+}
+.top-nav {
+    height: 60px;
+    background: rgba(30,30,45,0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.top-nav h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ff6ec7;
+}
+.card {
+    background: rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform .2s, box-shadow .2s;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+.badge {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.badge-low {background:#28a745;color:#fff;}
+.badge-medium {background:#fd7e14;color:#fff;}
+.badge-high {background:#dc3545;color:#fff;}
+.btn {
+    background: linear-gradient(135deg, #ff6ec7, #8a2be2);
+    border: none;
+    color: #fff;
+    padding: .6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .3s, box-shadow .3s;
+}
+.btn:hover {
+    background: linear-gradient(135deg, #8a2be2, #ff6ec7);
+    box-shadow: 0 0 12px rgba(255,110,199,.6);
+}
+#toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+}
+.toast {
+    background: #333;
+    color: #fff;
+    padding: .8rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: .5rem;
+    min-width: 250px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    animation: fadein .4s ease forwards;
+}
+@keyframes fadein {
+    from {opacity:0; transform: translateY(-10px);}
+    to {opacity:1; transform: translateY(0);}
+}
+@media (max-width: 768px) {
+    .main-container {flex-direction: column; padding:1rem;}
+    .sidebar {width:100%; height:auto; margin-bottom:1rem;}
+}

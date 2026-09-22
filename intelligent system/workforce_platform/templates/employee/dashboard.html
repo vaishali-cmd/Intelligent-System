@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Workspace | Workforce Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --accent: #fbbf24;
+            --bg: #110d06;
+            --card-bg: rgba(33, 23, 10, 0.85);
+            --border: rgba(245, 158, 11, 0.2);
+            --text: #fffbeb;
+            --text-muted: #fde68a;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 10% 10%, #451a03 0%, #291205 45%, #0f0702 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            height: 70px;
+            background: rgba(35, 18, 5, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #fde68a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role-pill {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fde68a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.875rem;
+            color: var(--text-sub);
+        }
+
+        .user-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .btn-switch {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-switch:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Hero */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(234, 88, 12, 0.12) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .hero-title h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero-title p {
+            color: #fde68a;
+            font-size: 0.95rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-amber {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-amber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.55);
+        }
+
+        /* Punch Card / Attendance Widget */
+        .punch-widget {
+            background: rgba(35, 18, 5, 0.7);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .punch-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .punch-icon {
+            font-size: 2rem;
+        }
+
+        /* KPI Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #ea580c);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fde68a;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .stat-footer {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Task Cards */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .task-card {
+            background: rgba(35, 18, 5, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: rgba(245, 158, 11, 0.45);
+            background: rgba(35, 18, 5, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .task-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .task-desc {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            margin-top: 0.3rem;
+        }
+
+        .badge-prio {
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .badge-high {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            border: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .badge-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fde68a;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #ea580c);
+            border-radius: 9999px;
+        }
+
+        .task-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.8rem;
+        }
+
+        /* Skill profile */
+        .skill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .emp-skill-tag {
+            background: rgba(245, 158, 11, 0.18);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fde68a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .punch-widget {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">💻</div>
+            <div class="brand-text">Workforce Platform</div>
+            <span class="role-pill">Employee Portal</span>
+        </div>
+
+        <div class="nav-actions">
+            <div class="user-profile">
+                <span>Employee:</span>
+                <span class="user-name">{{ employee.full_name if employee else current_user.email }}</span>
+            </div>
+            <a href="{{ url_for('auth.login') }}" class="btn-switch">⇄ Switch Role</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+                <span>🚪</span>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Hero Header -->
+        <section class="hero-banner">
+            <div class="hero-title">
+                <h2>Welcome Back, {{ employee.first_name if employee else 'Developer' }} 👋</h2>
+                <p>Personal task agenda, deliverables progress, technical skills & attendance tracker</p>
+            </div>
+            <div class="hero-buttons">
+                <button class="btn-amber" onclick="alert('Clock-in confirmed! Today\'s hours active.')">⏱️ Clock In /
+                    Punch Time</button>
+            </div>
+        </section>
+
+        <!-- Attendance Status -->
+        <div class="punch-widget">
+            <div class="punch-info">
+                <div class="punch-icon">✅</div>
+                <div>
+                    <div style="font-weight: 800; font-size: 1.05rem; color: #ffffff;">Today's Attendance: Present &
+                        Verified</div>
+                    <div style="font-size: 0.82rem; color: #fde68a;">Recorded via automated workforce system on {{ today
+                        or 'Today' }}. Shift active.</div>
+                </div>
+            </div>
+            <span
+                style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.85rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem;">Checked
+                In</span>
+        </div>
+
+        <!-- KPI Stats -->
+        <section class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>My Assigned Tasks</span>
+                    <span>📋</span>
+                </div>
+                <div class="stat-value">{{ tasks|length }}</div>
+                <div class="stat-footer">
+                    <span>In-flight sprint queue</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Average Progress</span>
+                    <span>⚡</span>
+                </div>
+                <div class="stat-value">68%</div>
+                <div class="stat-footer">
+                    <span>On schedule</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Verified Skills</span>
+                    <span>⭐</span>
+                </div>
+                <div class="stat-value">{{ employee.skills|length if employee and employee.skills else '4' }}</div>
+                <div class="stat-footer">
+                    <span>Technical proficiencies</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Assigned Department</span>
+                    <span>🏢</span>
+                </div>
+                <div class="stat-value" style="font-size: 1.4rem; padding-top: 0.5rem;">{{ employee.department.name if
+                    employee and employee.department else 'Engineering' }}</div>
+                <div class="stat-footer">
+                    <span>Core Platform</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Left: Assigned Tasks -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🎯</span>
+                        <span>My Assigned Work Items</span>
+                    </div>
+                    <span style="font-size: 0.8rem; color: #fde68a;">{{ tasks|length }} Tasks Assigned</span>
+                </div>
+
+                <div class="task-list">
+                    {% for task in tasks %}
+                    <div class="task-card">
+                        <div class="task-top">
+                            <div>
+                                <div class="task-title">{{ task.title }}</div>
+                                <div class="task-desc">{{ task.description or 'No task description provided.' }}</div>
+                            </div>
+                            <div>
+                                {% if task.priority.value == 'Critical' %}
+                                <span class="badge-prio badge-critical">Critical</span>
+                                {% elif task.priority.value == 'High' %}
+                                <span class="badge-prio badge-high">High</span>
+                                {% elif task.priority.value == 'Medium' %}
+                                <span class="badge-prio badge-medium">Medium</span>
+                                {% else %}
+                                <span class="badge-prio badge-low">Low</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.3rem;">
+                                <span>Completion Progress</span>
+                                <span style="font-weight: 700; color: #f59e0b;">{{ task.progress }}%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" style="width: {{ task.progress }}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="task-bottom">
+                            <span style="color: #94a3b8;">Due: {{ task.due_date or 'This Sprint' }}</span>
+                            <button class="btn-amber" style="padding: 0.35rem 0.85rem; font-size: 0.75rem;"
+                                onclick="alert('Progress updated to {{ task.progress }}%')">
+                                Update Progress
+                            </button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+                        <p>No active tasks assigned yet. Check back during daily standup!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right: Skills & Profile -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>⭐</span>
+                            <span>My Verified Technical Skills</span>
+                        </div>
+                    </div>
+                    <div class="skill-grid">
+                        {% if employee and employee.skills %}
+                        {% for skill in employee.skills %}
+                        <span class="emp-skill-tag">{{ skill.name }}</span>
+                        {% endfor %}
+                        {% else %}
+                        <span class="emp-skill-tag">Python</span>
+                        <span class="emp-skill-tag">Flask</span>
+                        <span class="emp-skill-tag">React</span>
+                        <span class="emp-skill-tag">SQL</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>📌</span>
+                            <span>Direct Squad Contacts</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 0.6rem; background: rgba(35, 18, 5, 0.4); border-radius: 8px;">
+                            <div>
+                                <div style="font-weight: 700; color: #ffffff;">Sarah Chen</div>
+                                <div style="font-size: 0.75rem; color: #94a3b8;">Technical Lead</div>
+                            </div>
+                            <button class="btn-amber" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;"
+                                onclick="alert('Messaging Lead Sarah Chen...')">Message</button>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 0.6rem; background: rgba(35, 18, 5, 0.4); border-radius: 8px;">
+                            <div>
+                                <div style="font-weight: 700; color: #ffffff;">Marcus Sterling</div>
+                                <div style="font-size: 0.75rem; color: #94a3b8;">Engineering Manager</div>
+                            </div>
+                            <button class="btn-amber" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;"
+                                onclick="alert('Requesting sync with Manager Marcus Sterling...')">Sync</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

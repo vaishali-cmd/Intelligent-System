@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Intelligence & Operations | Workforce Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --accent: #34d399;
+            --bg: #06110f;
+            --card-bg: rgba(13, 31, 26, 0.85);
+            --border: rgba(52, 211, 153, 0.15);
+            --text: #f0fdf4;
+            --text-muted: #86efac;
+            --text-sub: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 10% 10%, #064e3b 0%, #022c22 45%, #051410 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            height: 70px;
+            background: rgba(6, 26, 20, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #a7f3d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .role-pill {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #a7f3d0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.875rem;
+            color: var(--text-sub);
+        }
+        .user-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .btn-switch {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-switch:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Hero banner */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .hero-title h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .hero-title p {
+            color: #a7f3d0;
+            font-size: 0.95rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .btn-emerald {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+            transition: all 0.2s;
+        }
+        .btn-emerald:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.55);
+        }
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover { background: rgba(255, 255, 255, 0.16); }
+
+        /* KPI Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #86efac;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .stat-footer {
+            font-size: 0.8rem;
+            color: #34d399;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* 2 Columns */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Task Table */
+        .table-responsive { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        th {
+            background: rgba(6, 26, 20, 0.7);
+            color: #86efac;
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 0.95rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+        }
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .badge-prio {
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-critical { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-high { background: rgba(249, 115, 22, 0.2); color: #fdba74; border: 1px solid rgba(249, 115, 22, 0.4); }
+        .badge-medium { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-low { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-top: 0.4rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 9999px;
+        }
+
+        /* Team cards */
+        .member-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            background: rgba(6, 26, 20, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .member-row:hover {
+            background: rgba(6, 26, 20, 0.8);
+            border-color: rgba(52, 211, 153, 0.4);
+        }
+        .member-name {
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .member-dept {
+            font-size: 0.75rem;
+            color: #86efac;
+        }
+
+        @media (max-width: 1024px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .stat-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 1rem; }
+            .dashboard-container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">💼</div>
+            <div class="brand-text">Workforce Platform</div>
+            <span class="role-pill">Management Suite</span>
+        </div>
+
+        <div class="nav-actions">
+            <div class="user-profile">
+                <span>Manager:</span>
+                <span class="user-name">{{ manager.full_name if manager else current_user.email }}</span>
+            </div>
+            <a href="{{ url_for('auth.login') }}" class="btn-switch">⇄ Switch Role</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+                <span>🚪</span>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Hero -->
+        <section class="hero-banner">
+            <div class="hero-title">
+                <h2>Operational Leadership & Velocity</h2>
+                <p>Strategic team alignment, project delivery tracking, and resource allocation</p>
+            </div>
+            <div class="hero-buttons">
+                <button class="btn-emerald" onclick="alert('Workload rebalancer evaluated: team capacity within optimal threshold!')">⚖️ Balance Workloads</button>
+                <button class="btn-outline" onclick="alert('Generating executive progress report...')">📊 Executive KPI Report</button>
+            </div>
+        </section>
+
+        <!-- KPI Stats -->
+        <section class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Teams Supervised</span>
+                    <span>🏢</span>
+                </div>
+                <div class="stat-value">{{ teams|length }}</div>
+                <div class="stat-footer">
+                    <span>Core Engineering Group</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Active Projects / Tasks</span>
+                    <span>⚡</span>
+                </div>
+                <div class="stat-value">{{ all_tasks|length }}</div>
+                <div class="stat-footer">
+                    <span>{{ in_progress_tasks|length }} In-Flight</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Critical Risk Deliverables</span>
+                    <span>🚨</span>
+                </div>
+                <div class="stat-value">{{ critical_tasks|length }}</div>
+                <div class="stat-footer" style="color: #fca5a5;">
+                    <span>Under active review</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Team Attendance</span>
+                    <span>✅</span>
+                </div>
+                <div class="stat-value">100%</div>
+                <div class="stat-footer">
+                    <span>All personnel present today</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Left: Department Tasks -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📋</span>
+                        <span>Department Milestone & Task Portfolio</span>
+                    </div>
+                    <span style="font-size: 0.8rem; color: #86efac;">{{ all_tasks|length }} Total Work Items</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task Title</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Delivery Progress</th>
+                                <th>Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in all_tasks %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700; color: #ffffff;">{{ task.title }}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">Created by: {{ task.creator.full_name if task.creator else 'Lead' }}</div>
+                                </td>
+                                <td>
+                                    {% if task.priority.value == 'Critical' %}
+                                        <span class="badge-prio badge-critical">Critical</span>
+                                    {% elif task.priority.value == 'High' %}
+                                        <span class="badge-prio badge-high">High</span>
+                                    {% elif task.priority.value == 'Medium' %}
+                                        <span class="badge-prio badge-medium">Medium</span>
+                                    {% else %}
+                                        <span class="badge-prio badge-low">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span style="font-weight: 600; color: #86efac;">{{ task.status.value }}</span>
+                                </td>
+                                <td style="min-width: 140px;">
+                                    <div style="font-size: 0.75rem; font-weight: 700; color: #ffffff;">{{ task.progress }}%</div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-fill" style="width: {{ task.progress }}%;"></div>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.8rem; color: #cbd5e1;">{{ task.due_date or 'Next Week' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right: Direct Reports & Capacity -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>👥</span>
+                            <span>Direct Reports & Leads</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% for emp in managed_employees %}
+                        <div class="member-row">
+                            <div>
+                                <div class="member-name">{{ emp.full_name }}</div>
+                                <div class="member-dept">{{ emp.user.role.name if emp.user and emp.user.role else 'Specialist' }}</div>
+                            </div>
+                            <button class="btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="alert('Opening 1:1 sync with {{ emp.full_name }}')">1:1 Sync</button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>📈</span>
+                            <span>Team Velocity Status</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.85rem;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                <span>Sprint Sprint Completion</span>
+                                <span style="font-weight: 700; color: #34d399;">74%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" style="width: 74%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                <span>Resource Capacity Utilization</span>
+                                <span style="font-weight: 700; color: #34d399;">82%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" style="width: 82%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

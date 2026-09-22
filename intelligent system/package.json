@@ -1,0 +1,9 @@
+{
+  "name": "workforce-platform",
+  "version": "1.0.0",
+  "description": "Flask workforce platform",
+  "scripts": {
+    "dev": "set \"FLASK_APP=workforce_platform.app\" && flask run"
+  },
+  "license": "MIT"
+}

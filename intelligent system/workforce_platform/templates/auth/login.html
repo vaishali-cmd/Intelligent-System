@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workforce Platform – Secure Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent: #06b6d4;
+            --bg-dark: #090d16;
+            --card-bg: rgba(17, 24, 39, 0.85);
+            --border-glow: rgba(99, 102, 241, 0.25);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, #0b0f19 50%, #030712 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient glowing orbs */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 { width: 450px; height: 450px; background: #6366f1; top: -100px; left: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: #06b6d4; bottom: -50px; right: -50px; }
+        .orb-3 { width: 350px; height: 350px; background: #ec4899; top: 40%; right: 25%; opacity: 0.15; }
+
+        .container {
+            width: 100%;
+            max-width: 860px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            align-items: center;
+        }
+
+        /* Brand Header */
+        .brand-header {
+            text-align: center;
+        }
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #a5b4fc;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .brand-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 30%, #c7d2fe 70%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.35rem;
+        }
+
+        /* Main Login Card */
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 480px;
+            padding: 2.25rem;
+            position: relative;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .alert.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .alert.info {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+        }
+        .alert.success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        /* Form */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            letter-spacing: 0.01em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.75);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #818cf8;
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+        }
+        .input-wrapper input::placeholder {
+            color: #6b7280;
+        }
+
+        /* Toggle Password Button */
+        .toggle-password-btn {
+            position: absolute;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .toggle-password-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+        }
+
+        /* SELECT ROLE - EXPLICITLY BLACK LETTER THEME */
+        .role-select-box {
+            position: relative;
+        }
+        .role-select-box select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: #ffffff !important;
+            color: #000000 !important; /* Pure Black letters for high clarity */
+            font-size: 0.95rem;
+            font-weight: 700 !important; /* Bold, highly readable black text */
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .role-select-box select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+        /* Black options theme */
+        .role-select-box select option {
+            background: #ffffff !important;
+            color: #000000 !important; /* Solid black letters */
+            font-weight: 600 !important;
+            padding: 0.5rem;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            margin-top: 0.5rem;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #4338ca 100%);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.45);
+            transition: all 0.25s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.55);
+            background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ====================================================
+           4 QUICK ROLE LOGINS IN DOWN (DEMO LOGINS SECTION)
+           ==================================================== */
+        .quick-logins-section {
+            width: 100%;
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 0.85rem;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .section-subtitle {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .role-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.15rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.85rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        .role-card.admin::before { background: linear-gradient(90deg, #818cf8, #c084fc); }
+        .role-card.manager::before { background: linear-gradient(90deg, #34d399, #10b981); }
+        .role-card.lead::before { background: linear-gradient(90deg, #38bdf8, #0ea5e9); }
+        .role-card.employee::before { background: linear-gradient(90deg, #fbbf24, #f97316); }
+
+        .role-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .role-top {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .role-badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .role-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+        }
+        .role-tag.admin { background: rgba(129, 140, 248, 0.2); color: #c7d2fe; border: 1px solid rgba(129, 140, 248, 0.3); }
+        .role-tag.manager { background: rgba(52, 211, 153, 0.2); color: #a7f3d0; border: 1px solid rgba(52, 211, 153, 0.3); }
+        .role-tag.lead { background: rgba(56, 189, 248, 0.2); color: #bae6fd; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .role-tag.employee { background: rgba(251, 191, 36, 0.2); color: #fde68a; border: 1px solid rgba(251, 191, 36, 0.3); }
+
+        .role-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 0.2rem;
+        }
+        .role-desc {
+            font-size: 0.76rem;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
+
+        .cred-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 0.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .cred-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.74rem;
+        }
+        .cred-lbl {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .cred-val {
+            color: #e2e8f0;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        /* 1-Click Login Button inside Card */
+        .quick-login-btn {
+            width: 100%;
+            padding: 0.55rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .role-card.admin .quick-login-btn {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+        .role-card.admin .quick-login-btn:hover {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+        .role-card.manager .quick-login-btn {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .role-card.manager .quick-login-btn:hover {
+            background: #059669;
+            color: #ffffff;
+        }
+        .role-card.lead .quick-login-btn {
+            background: rgba(14, 165, 233, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(14, 165, 233, 0.4);
+        }
+        .role-card.lead .quick-login-btn:hover {
+            background: #0284c7;
+            color: #ffffff;
+        }
+        .role-card.employee .quick-login-btn {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        .role-card.employee .quick-login-btn:hover {
+            background: #d97706;
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .role-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .brand-header h1 {
+                font-size: 1.8rem;
+            }
+            .login-card {
+                padding: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <div class="container">
+        <!-- Brand Header -->
+        <div class="brand-header">
+            <div class="brand-badge">⚡ Next-Gen Enterprise Portal</div>
+            <h1>Workforce Platform</h1>
+            <p>Unified Intelligent Workspace for Enterprise Operations & Team Orchestration</p>
+        </div>
+
+        <!-- Main Login Card -->
+        <div class="login-card">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        <div class="alert {{ category }}">
+                            <span>⚠️</span>
+                            <span>{{ msg }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+                <!-- Email input -->
+                <div class="form-group">
+                    <label for="email">Account Email</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="admin@workforce.com" 
+                            required 
+                            autocomplete="username"
+                        />
+                    </div>
+                </div>
+
+                <!-- Password input with Toggle button -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="••••••••" 
+                            required 
+                            autocomplete="current-password"
+                        />
+                        <button type="button" class="toggle-password-btn" id="togglePassword">Show</button>
+                    </div>
+                </div>
+
+                <!-- Select Role (Letter theme in black) -->
+                <div class="form-group">
+                    <label for="role">
+                        <span>Select Role (Black Letter Theme)</span>
+                        <span style="font-size: 0.75rem; color: #a5b4fc;">Required</span>
+                    </label>
+                    <div class="role-select-box">
+                        <select id="role" name="role" required>
+                            <option value="" disabled {% if not selected_role %}selected{% endif %}>-- Select your role --</option>
+                            <option value="HR" {% if selected_role == 'HR' %}selected{% endif %}>👑 HR / Admin</option>
+                            <option value="Manager" {% if selected_role == 'Manager' %}selected{% endif %}>💼 Manager</option>
+                            <option value="Team Lead" {% if selected_role == 'Team Lead' %}selected{% endif %}>🚀 Team Lead</option>
+                            <option value="Employee" {% if selected_role == 'Employee' %}selected{% endif %}>💻 Employee</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span>Sign In to Dashboard</span>
+                    <span>→</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ====================================================
+             4 QUICK ROLE LOGINS IN DOWN (DEMO ACCESS & IDS)
+             ==================================================== -->
+        <div class="quick-logins-section">
+            <div class="section-header">
+                <div>
+                    <div class="section-title">
+                        <span>🔑</span>
+                        <span>4 Role Logins Available</span>
+                    </div>
+                    <div class="section-subtitle">Click "1-Click Sign In" on any card below to open and see each unique dashboard</div>
+                </div>
+            </div>
+
+            <div class="role-grid">
+                <!-- 1. HR / Admin -->
+                <div class="role-card admin">
+                    <div class="role-top">
+                        <div class="role-badge-row">
+                            <span class="role-tag admin">Executive</span>
+                            <span>👑</span>
+                        </div>
+                        <div class="role-name">HR / Admin</div>
+                        <div class="role-desc">System analytics, employee directory, departments & compliance audit</div>
+                    </div>
+                    <div class="cred-box">
+                        <div class="cred-line">
+                            <span class="cred-lbl">ID:</span>
+                            <span class="cred-val">admin@workforce.com</span>
+                        </div>
+                        <div class="cred-line">
+                            <span class="cred-lbl">Pass:</span>
+                            <span class="cred-val">admin123</span>
+                        </div>
+                    </div>
+                    <button type="button" class="quick-login-btn" onclick="quickFillAndLogin('admin@workforce.com', 'admin123', 'HR')">
+                        <span>⚡ 1-Click Sign In</span>
+                    </button>
+                </div>
+
+                <!-- 2. Manager -->
+                <div class="role-card manager">
+                    <div class="role-top">
+                        <div class="role-badge-row">
+                            <span class="role-tag manager">Leadership</span>
+                            <span>💼</span>
+                        </div>
+                        <div class="role-name">Manager</div>
+                        <div class="role-desc">Department KPIs, team velocity, workload oversight & resource balance</div>
+                    </div>
+                    <div class="cred-box">
+                        <div class="cred-line">
+                            <span class="cred-lbl">ID:</span>
+                            <span class="cred-val">manager@workforce.com</span>
+                        </div>
+                        <div class="cred-line">
+                            <span class="cred-lbl">Pass:</span>
+                            <span class="cred-val">manager123</span>
+                        </div>
+                    </div>
+                    <button type="button" class="quick-login-btn" onclick="quickFillAndLogin('manager@workforce.com', 'manager123', 'Manager')">
+                        <span>⚡ 1-Click Sign In</span>
+                    </button>
+                </div>
+
+                <!-- 3. Team Lead -->
+                <div class="role-card lead">
+                    <div class="role-top">
+                        <div class="role-badge-row">
+                            <span class="role-tag lead">Technical Lead</span>
+                            <span>🚀</span>
+                        </div>
+                        <div class="role-name">Team Lead</div>
+                        <div class="role-desc">AI smart task assignment, deadline risk tracking & sprint orchestration</div>
+                    </div>
+                    <div class="cred-box">
+                        <div class="cred-line">
+                            <span class="cred-lbl">ID:</span>
+                            <span class="cred-val">lead@workforce.com</span>
+                        </div>
+                        <div class="cred-line">
+                            <span class="cred-lbl">Pass:</span>
+                            <span class="cred-val">lead123</span>
+                        </div>
+                    </div>
+                    <button type="button" class="quick-login-btn" onclick="quickFillAndLogin('lead@workforce.com', 'lead123', 'Team Lead')">
+                        <span>⚡ 1-Click Sign In</span>
+                    </button>
+                </div>
+
+                <!-- 4. Employee -->
+                <div class="role-card employee">
+                    <div class="role-top">
+                        <div class="role-badge-row">
+                            <span class="role-tag employee">Individual</span>
+                            <span>💻</span>
+                        </div>
+                        <div class="role-name">Employee</div>
+                        <div class="role-desc">Personal task tracker, status updates, skill tags & daily check-in</div>
+                    </div>
+                    <div class="cred-box">
+                        <div class="cred-line">
+                            <span class="cred-lbl">ID:</span>
+                            <span class="cred-val">employee@workforce.com</span>
+                        </div>
+                        <div class="cred-line">
+                            <span class="cred-lbl">Pass:</span>
+                            <span class="cred-val">employee123</span>
+                        </div>
+                    </div>
+                    <button type="button" class="quick-login-btn" onclick="quickFillAndLogin('employee@workforce.com', 'employee123', 'Employee')">
+                        <span>⚡ 1-Click Sign In</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Password visibility
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            toggleBtn.textContent = isPassword ? 'Hide' : 'Show';
+        });
+
+        // Form submit spinner
+        const form = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        form.addEventListener('submit', () => {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
+        });
+
+        // 1-Click Auto Fill & Submit Function for the 4 Down Logins
+        function quickFillAndLogin(email, password, role) {
+            const emailInput = document.getElementById('email');
+            const roleSelect = document.getElementById('role');
+
+            emailInput.value = email;
+            passwordInput.value = password;
+            roleSelect.value = role;
+
+            // Visual feedback
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner"></span> Accessing ${role} Dashboard...`;
+
+            // Submit form to log in immediately
+            form.submit();
+        }
+    </script>
+</body>
+</html>

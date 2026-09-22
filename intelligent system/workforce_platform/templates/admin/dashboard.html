@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR & Admin Control Center | Workforce Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #a855f7;
+            --bg: #090d16;
+            --card-bg: rgba(22, 27, 46, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 10% 10%, #1e1b4b 0%, #0b0f19 50%, #030712 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            height: 70px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .role-pill {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #c7d2fe;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .user-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .btn-switch {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            color: #cbd5e1;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-switch:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .dashboard-container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header banner */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .hero-title h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .hero-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.55);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        /* Stat Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+        }
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .stat-footer {
+            font-size: 0.8rem;
+            color: #34d399;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* Two Column Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Directory Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        th {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 0.95rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .badge-active {
+            background: rgba(52, 211, 153, 0.15);
+            color: #6ee7b7;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .badge-dept {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Departments list */
+        .dept-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .dept-item:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(15, 23, 42, 0.8);
+        }
+        .dept-name {
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .dept-count {
+            background: rgba(99, 102, 241, 0.2);
+            color: #c7d2fe;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Audit Log List */
+        .audit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.82rem;
+        }
+        .audit-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6366f1;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+        .audit-text {
+            color: #cbd5e1;
+        }
+        .audit-time {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            margin-top: 0.2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .stat-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 1rem; }
+            .dashboard-container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <header class="navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">👑</div>
+            <div class="brand-text">Workforce Platform</div>
+            <span class="role-pill">HR / Admin Center</span>
+        </div>
+
+        <div class="nav-actions">
+            <div class="user-profile">
+                <span>Logged in as:</span>
+                <span class="user-name">{{ current_user.email }}</span>
+            </div>
+            <a href="{{ url_for('auth.login') }}" class="btn-switch">⇄ Switch Role</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">
+                <span>🚪</span>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Hero Header -->
+        <section class="hero-banner">
+            <div class="hero-title">
+                <h2>HR & Executive Administration</h2>
+                <p>Enterprise organization governance, user directories, role permissions & workforce health</p>
+            </div>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="alert('Action: Add Employee modal opened')">＋ Add New Employee</button>
+                <button class="btn-secondary" onclick="alert('Exporting full workforce compliance report (CSV)...')">📥 Export Directory</button>
+            </div>
+        </section>
+
+        <!-- KPI Stats -->
+        <section class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Total Employees</span>
+                    <span>👥</span>
+                </div>
+                <div class="stat-value">{{ employees|length }}</div>
+                <div class="stat-footer">
+                    <span>↑ 100% active standing</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Departments</span>
+                    <span>🏢</span>
+                </div>
+                <div class="stat-value">{{ departments|length }}</div>
+                <div class="stat-footer">
+                    <span>4 operational units</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Active System Tasks</span>
+                    <span>📋</span>
+                </div>
+                <div class="stat-value">{{ tasks_count }}</div>
+                <div class="stat-footer">
+                    <span>Cross-team workflows</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Attendance Rate</span>
+                    <span>⏱️</span>
+                </div>
+                <div class="stat-value">98.4%</div>
+                <div class="stat-footer">
+                    <span>Optimal compliance</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="content-grid">
+            <!-- Left: Directory -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📋</span>
+                        <span>Enterprise Workforce Directory</span>
+                    </div>
+                    <span class="badge-dept">{{ employees|length }} Registered Profiles</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>System Role</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emp in employees %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700; color: #ffffff;">{{ emp.full_name }}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">{{ emp.user.email if emp.user else 'N/A' }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge-dept">{{ emp.department.name if emp.department else 'Engineering' }}</span>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 600; color: #c7d2fe;">{{ emp.user.role.name if emp.user and emp.user.role else 'Standard' }}</span>
+                                </td>
+                                <td style="font-family: monospace; font-size: 0.8rem;">{{ emp.phone or '+1 555-0199' }}</td>
+                                <td>
+                                    <span class="badge-active">Active</span>
+                                </td>
+                                <td>
+                                    <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="alert('Viewing audit details for {{ emp.full_name }}')">Inspect</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right: Department breakdown & audit log -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>🏢</span>
+                            <span>Departments Overview</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% for dept in departments %}
+                        <div class="dept-item">
+                            <span class="dept-name">{{ dept.name }}</span>
+                            <span class="dept-count">Active Unit</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>🛡️</span>
+                            <span>Security & Audit Stream</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="audit-item">
+                            <div class="audit-dot"></div>
+                            <div>
+                                <div class="audit-text">HR Admin authenticated successfully</div>
+                                <div class="audit-time">Just now · Session active</div>
+                            </div>
+                        </div>
+                        <div class="audit-item">
+                            <div class="audit-dot" style="background: #34d399;"></div>
+                            <div>
+                                <div class="audit-text">Daily attendance synchronization executed</div>
+                                <div class="audit-time">Today · Automated check-in</div>
+                            </div>
+                        </div>
+                        <div class="audit-item">
+                            <div class="audit-dot" style="background: #38bdf8;"></div>
+                            <div>
+                                <div class="audit-text">Database schema consistency verified</div>
+                                <div class="audit-time">System startup · Healthy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
